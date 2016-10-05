@@ -12,6 +12,7 @@ function generate_runtime_conf(nodes) {
             delete bot[STARTUP_KEYS[index]];
         }
         
+        new_nodes[id] = save_keys[id];
         save_keys[id]['id'] = bot['id'];
         delete bot['id'];
         
@@ -19,7 +20,7 @@ function generate_runtime_conf(nodes) {
     }
     
     conf_string = JSON.stringify(new_nodes, undefined, 4);
-    
+
     for (id in nodes) {
         var bot=nodes[id];
         for (index in STARTUP_KEYS) {
@@ -34,12 +35,18 @@ function generate_runtime_conf(nodes) {
 
 function read_runtime_conf(config) {
     var nodes = {};
-    
     for (id in config) {
         var bot = config[id];
-        
         bot['id'] = id;
         nodes[id] = bot;
+
+        if (id in nodes) {
+            nodes[id]['group'] = bot['group'];
+            nodes[id]['name'] = bot['name'];
+            nodes[id]['module'] = bot['module'];
+            nodes[id]['description'] = bot['description'];
+            nodes[id]['parameters'] = bot['parameters'];
+        }
     }
     
     return nodes;
